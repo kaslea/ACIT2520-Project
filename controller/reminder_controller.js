@@ -45,6 +45,7 @@ let remindersController = {
     let reminder = database.cindy.reminders[req.params.id-1]
     reminder.title = req.body.title
     reminder.description = req.body.description
+    reminder.completed = req.body.completed
 
     res.redirect("/reminders")
   },
