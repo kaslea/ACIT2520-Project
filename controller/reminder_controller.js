@@ -1,4 +1,5 @@
 let database = require("../database");
+// [req.user.username]
 
 let remindersController = {
   list: (req, res) => {
@@ -41,7 +42,11 @@ let remindersController = {
   },
 
   update: (req, res) => {
-    // implementation here 👈
+    let reminder = database.cindy.reminders[req.params.id-1]
+    reminder.title = req.body.title
+    reminder.description = req.body.description
+
+    res.redirect("/reminders")
   },
 
   delete: (req, res) => {
