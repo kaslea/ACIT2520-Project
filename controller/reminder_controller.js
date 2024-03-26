@@ -1,6 +1,8 @@
 let database = require("../database");
 // [req.user.username]
 
+let idNum = 1;
+
 let remindersController = {
   list: (req, res) => {
     res.render("reminder/index", { reminders: database.cindy.reminders });
@@ -23,8 +25,9 @@ let remindersController = {
   },
 
   create: (req, res) => {
+    idNum += 1;
     let reminder = {
-      id: database.cindy.reminders.length + 1,
+      id: idNum,
       title: req.body.title,
       description: req.body.description,
       completed: false,
@@ -52,15 +55,12 @@ let remindersController = {
   },
 
   delete: (req, res) => {
-    // implementation here 👈
     const url = req.originalUrl.split("/");
     const reminderID = url[3]
-    // // let arr = database.cindy.reminders; 
     delete database.cindy.reminders[reminderID-1];
     database.cindy.reminders.sort();
     database.cindy.reminders.pop();
     res.redirect("/reminders");
-
   },
 };
 
