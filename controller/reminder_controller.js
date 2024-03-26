@@ -49,8 +49,10 @@ let remindersController = {
     let reminder = database.cindy.reminders[req.params.id-1]
     reminder.title = req.body.title
     reminder.description = req.body.description
-    reminder.completed = req.body.completed
-
+    if(req.body.completed === "false"){
+      reminder.completed = false
+    }
+    else reminder.completed = true
     res.redirect("/reminders")
   },
 
