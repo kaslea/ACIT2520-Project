@@ -39,7 +39,7 @@ let remindersController = {
     for(let i = 1; i<= idList.length; i++){
       if(!idList.includes(i)){
         newId = i
-        break
+        break //If idlist is [1,2,5], 3 is still assigned. 
       }
     }
     //Assigns newId a value if all of the lowest possible values are taken( if idList is [1,2,3])
@@ -79,10 +79,14 @@ let remindersController = {
   },
 
   delete: (req, res) => {
-    const url = req.originalUrl.split("/");
-    const reminderID = url[3]
-    database.cindy.reminders.sort()
-    delete database.cindy.reminders[reminderID-1];
+    const reminderID = req.params.id
+    const reminders = database.cindy.reminders;
+    for(let i = 0; i< reminders.length; i++){
+      if(reminders[i].id == reminderID)
+      {
+        delete database.cindy.reminders[i];
+      }
+    }
     database.cindy.reminders.sort();
     database.cindy.reminders.pop();
     res.redirect("/reminders");
