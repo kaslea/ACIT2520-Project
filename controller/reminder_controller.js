@@ -1,7 +1,7 @@
 let database = require("../database");
 // [req.user.username]
 
-let idNum = 1;
+
 
 let remindersController = {
   list: (req, res) => {
@@ -25,9 +25,31 @@ let remindersController = {
   },
 
   create: (req, res) => {
-    idNum += 1;
+    const reminders = database.cindy.reminders;
+    // Create assigns the lowest possible value to the id. Just using reminder.length can assign duplicate id values.
+    let idList = [];
+    let newId = 0;
+    // Gets a list of all id values already taken up.
+    reminders.forEach((reminder) =>{
+      idList.push(reminder.id);
+    });
+
+    // Assigns the lowest value that isn't already an id to newId, which will be assigned to the new reminder object. 
+    //If idList is [1,2,4], assigns 3 to newId
+    for(let i = 1; i<= idList.length; i++){
+      if(!idList.includes(i)){
+        newId = i
+        break
+      }
+    }
+    //Assigns newId a value if all of the lowest possible values are taken( if idList is [1,2,3])
+    if(newId == 0){
+      newId = reminders.length+1;
+    }
+
+    //Creates the reminder and adds it to the database. 
     let reminder = {
-      id: idNum,
+      id: newId,
       title: req.body.title,
       description: req.body.description,
       completed: false,
@@ -59,6 +81,7 @@ let remindersController = {
   delete: (req, res) => {
     const url = req.originalUrl.split("/");
     const reminderID = url[3]
+    database.cindy.reminders.sort()
     delete database.cindy.reminders[reminderID-1];
     database.cindy.reminders.sort();
     database.cindy.reminders.pop();
